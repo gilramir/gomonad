@@ -1,7 +1,7 @@
-# Go-Monads: Maybe, Result, and Either
+# Go Monad: Maybe, Result, and Either
 
 A lightweight, type-safe implementation of functional programming monads
-for Go 1.18+. This library brings the safety of Haskell and Gren to Go,
+for Go 1.18+. This library brings the safety of Haskell, Elm, and Gren to Go,
 helping you reduce `if err != nil` boilerplate and handle optionality
 without `nil` pointers.
 
