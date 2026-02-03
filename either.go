@@ -1,4 +1,4 @@
-package eitherpkg
+package gomonad
 
 // Either represents a value of one of two types.
 // A is usually the "Left" type, B is usually the "Right" type.

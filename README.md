@@ -7,7 +7,7 @@ without `nil` pointers.
 
 ---
 
-## 🚀 Features
+## Features
 
 * **Maybe[T]**: Handle optional values without `nil`.
 * **Result[T]**: Railway-oriented error handling using the standard Go `error` interface.
@@ -17,7 +17,7 @@ without `nil` pointers.
 
 ---
 
-## 📦 Installation
+## Installation
 
 ```bash
 go get github.com/gilramir/gomonad
@@ -26,18 +26,22 @@ go get github.com/gilramir/gomonad
 
 ---
 
-## 🛠 Usage
+## Usage
 
 ### 1. Maybe Monad
 
 Use `Maybe` when a value might be missing, such as a database lookup or an optional configuration.
 
 ```go
-func findUser(id int) Maybe[string] {
+import (
+    monad "github.com/gilramir/gomonad"
+)
+
+func findUser(id int) monad.Maybe[string] {
     if id == 42 {
-        return Just("Alice")
+        return monad.Just("Alice")
     }
-    return Nothing[string]()
+    return monad.Nothing[string]()
 }
 
 // Chaining with Map
@@ -45,7 +49,7 @@ name := findUser(42).Map(func(s string) string {
     return strings.ToUpper(s)
 })
 
-fmt.Println(name.Unpack("Unknown")) // ALICE
+fmt.Println(name.Unpack("Unknown")) // Alice
 
 ```
 
@@ -56,20 +60,24 @@ Use `Result` to chain operations that might fail. This follows the
 bypasses the rest of the chain.
 
 ```go
-func parseAge(input string) Result[int] {
+import (
+    monad "github.com/gilramir/gomonad"
+)
+
+func parseAge(input string) monad.Result[int] {
     age, err := strconv.Atoi(input)
     if err != nil {
-        return Err[int](err)
+        return monad.Err[int](err)
     }
-    return Ok(age)
+    return monad.Ok(age)
 }
 
 // Chain operations without checking errors at every step
-res := BindResult(parseAge("25"), func(age int) Result[int] {
+res := monad.BindResult(parseAge("25"), func(age int) monad.Result[int] {
     if age < 18 {
-        return Err[int](errors.New("too young"))
+        return monad.Err[int](errors.New("too young"))
     }
-    return Ok(age)
+    return monad.Ok(age)
 })
 
 ```
@@ -79,11 +87,15 @@ res := BindResult(parseAge("25"), func(age int) Result[int] {
 Use `Either` when you have two valid paths that aren't necessarily "success" or "failure."
 
 ```go
-// Swap values or fold them into a single result
-val := Right[string, int](100)
-swapped := Swap(val) // Becomes Left[int, string](100)
+import (
+    monad "github.com/gilramir/gomonad"
+)
 
-result := Fold(swapped,
+// Swap values or fold them into a single result
+val := monad.Right[string, int](100)
+swapped := monad.Swap(val) // Becomes Left[int, string](100)
+
+result := monad.Fold(swapped,
     func(i int) string { return "Got a number" },
     func(s string) string { return "Got a string" },
 )
@@ -92,7 +104,7 @@ result := Fold(swapped,
 
 ---
 
-## 📑 Core Concepts
+## Core Concepts
 
 | Type | Intent | Success Path | Failure/Alt Path |
 | --- | --- | --- | --- |
@@ -104,7 +116,7 @@ result := Fold(swapped,
 
 In Go, methods cannot introduce new type parameters. To allow transforming
 a `Maybe[int]` into a `Maybe[string]`, we use package-level functions like
-`Map` and `Bind` rather than struct methods.
+`MapMaybe` and `BindMaybe` rather than struct methods.
 
 ---
 

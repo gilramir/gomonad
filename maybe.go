@@ -1,4 +1,4 @@
-package maybepkg
+package gomonad
 
 // Maybe represents a value that might or might not exist.
 type Maybe[T any] struct {
@@ -17,7 +17,7 @@ func Nothing[T any]() Maybe[T] {
 }
 
 // Bind (or FlatMap) allows chaining operations that also return a Maybe.
-func Bind[T any, U any](m Maybe[T], f func(T) Maybe[U]) Maybe[U] {
+func BindMaybe[T any, U any](m Maybe[T], f func(T) Maybe[U]) Maybe[U] {
 	if !m.isJust {
 		return Nothing[U]()
 	}
@@ -25,7 +25,7 @@ func Bind[T any, U any](m Maybe[T], f func(T) Maybe[U]) Maybe[U] {
 }
 
 // Map transforms the value inside if it exists.
-func Map[T any, U any](m Maybe[T], f func(T) U) Maybe[U] {
+func MapMaybe[T any, U any](m Maybe[T], f func(T) U) Maybe[U] {
 	if !m.isJust {
 		return Nothing[U]()
 	}

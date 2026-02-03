@@ -1,4 +1,4 @@
-package resultpkg
+package gomonad
 
 // Result represents a value that is either a success (Ok) or a failure (error).
 type Result[T any] struct {
